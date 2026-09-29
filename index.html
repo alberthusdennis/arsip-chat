@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Me n uuu</title>
+    <style>
+         :root {
+            --bg: #EFEAE2;
+            --header: #008069;
+            --bubble-right: #D9FDD3;
+            --bubble-left: #FFFFFF;
+            --text: #111B21;
+            --muted: #667781;
+            --accent: #008069;
+        }
+        
+        body.dark {
+            --bg: #0B141A;
+            --header: #202C33;
+            --bubble-right: #005C4B;
+            --bubble-left: #202C33;
+            --text: #E9EDEF;
+            --muted: #8696A0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background .3s, color .3s;
+        }
+        /* === COVER === */
+        
+        #cover {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #075E54 0%, #128C7E 100%);
+            color: white;
+            text-align: center;
+            padding: 24px;
+            z-index: 100;
+            transition: opacity .6s;
+        }
+        
+        #cover.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .cover-content {
+            max-width: 380px;
+        }
+        
+        .photo-frame {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 24px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+            background: rgba(255, 255, 255, .1);
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        #cover h1 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        #cover p {
+            font-size: 16px;
+            line-height: 1.7;
+            opacity: .95;
+            margin-bottom: 32px;
+        }
+        
+        #cover button {
+            background: white;
+            color: #075E54;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+        }
+        
+        #cover button:hover {
+            transform: scale(1.05);
+        }
+        /* === CHAT === */
+        
+        #chat {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        #chat.show {
+            display: flex;
+        }
+        
+        header {
+            background: var(--header);
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        header .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        header .info {
+            flex: 1;
+        }
+        
+        header .info h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        header .info span {
+            font-size: 12px;
+            opacity: .85;
+        }
+        
+        header .actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        header button {
+            background: rgba(255, 255, 255, .15);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .2s;
+        }
+        
+        header button:hover {
+            background: rgba(255, 255, 255, .3);
+        }
+        /* Search bar */
+        
+        #searchBar {
+            display: none;
+            padding: 10px 16px;
+            background: var(--header);
+            border-top: 1px solid rgba(255, 255, 255, .1);
+        }
+        
+        #searchBar.show {
+            display: block;
+        }
+        
+        #searchBar input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            outline: none;
+        }
+        /* Messages */
+        
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 12px 40px;
+            background-image: radial-gradient(circle at 20% 30%, rgba(0, 128, 105, .04) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(0, 128, 105, .04) 0%, transparent 40%);
+        }
+        
+        .date-sep {
+            text-align: center;
+            margin: 20px 0 12px;
+        }
+        
+        .date-sep span {
+            background: var(--bubble-left);
+            color: var(--muted);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+        }
+        
+        .msg {
+            display: flex;
+            margin-bottom: 4px;
+        }
+        
+        .msg.right {
+            justify-content: flex-end;
+        }
+        
+        .msg.left {
+            justify-content: flex-start;
+        }
+        
+        .bubble {
+            max-width: 65%;
+            /* dari 78% jadi 65% */
+            padding: 6px 10px 4px;
+            /* dari 8px 12px 6px */
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+            font-size: 14px;
+            /* dari 14.5px */
+            line-height: 1.4;
+            /* dari 1.45 */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            /* tambahan penting */
+            white-space: normal;
+            /* ← INI KUNCI UTAMA: ganti dari pre-wrap */
+        }
+        
+        .msg.right .bubble {
+            background: var(--bubble-right);
+            border-top-right-radius: 2px;
+        }
+        
+        .msg.left .bubble {
+            background: var(--bubble-left);
+            border-top-left-radius: 2px;
+        }
+        
+        .bubble .meta {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            margin-top: 4px;
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        
+        .bubble .meta .check {
+            color: #53BDEB;
+        }
+        
+        .msg.system {
+            justify-content: center;
+        }
+        
+        .msg.system .bubble {
+            background: rgba(0, 0, 0, .06);
+            color: var(--muted);
+            font-size: 12px;
+            font-style: italic;
+            box-shadow: none;
+            text-align: center;
+        }
+        
+        body.dark .msg.system .bubble {
+            background: rgba(255, 255, 255, .06);
+        }
+        
+        .bubble .media-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(0, 0, 0, .06);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        
+        .bubble .edited {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        /* Timeline panel */
+        
+        #timeline {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            height: 100vh;
+            background: var(--bubble-left);
+            z-index: 20;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, .15);
+            transition: right .3s;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        #timeline.show {
+            right: 0;
+        }
+        
+        #timeline h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--accent);
+            border-bottom: 1px solid var(--bg);
+            padding-bottom: 10px;
+        }
+        
+        #timeline .tl-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background .2s;
+        }
+        
+        #timeline .tl-item:hover {
+            background: var(--bg);
+        }
+        
+        #timeline .tl-item .count {
+            color: var(--muted);
+            font-size: 12px;
+        }
+        /* Music button */
+        
+        #musicBtn.playing {
+            background: var(--accent);
+        }
+        /* Footer credit */
+        
+        #credit {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+        
+        @media (max-width: 600px) {
+            .bubble {
+                max-width: 85%;
+                font-size: 14px;
+            }
+            .photo-frame {
+                width: 150px;
+                height: 150px;
+            }
+            #timeline {
+                width: 85%;
+                right: -85%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- COVER -->
+    <div id="cover">
+        <div class="cover-content">
+            <div class="photo-frame">
+                <img src="assets/foto-kami.jpg" alt="Kita">
+            </div>
+            <h1>Halo Yohanaa,</h1>
+            <p>lagi kangen yaa? wkwk,<br>selamat membacaa.</p>
+            <button onclick="openArchive()"> mau bacaa </button>
+        </div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="chat">
+        <header>
+            <div class="avatar">Y</div>
+            <div class="info">
+                <h2>Yohana</h2>
+                <span id="subtitle">arsip kenangan</span>
+            </div>
+            <div class="actions">
+                <button onclick="toggleSearch()" title="Cari">🔍</button>
+                <button onclick="toggleTimeline()" title="Timeline">📅</button>
+                <button onclick="toggleDark()" title="Mode malam">🌙</button>
+                <button id="musicBtn" onclick="toggleMusic()" title="Musik">🎵</button>
+            </div>
+        </header>
+
+        <div id="searchBar">
+            <input type="text" id="searchInput" placeholder="Cari kata kunci..." oninput="doSearch()">
+        </div>
+
+        <div id="messages"></div>
+        <div id="credit"> Created by Dennis, n nya 2</div>
+    </div>
+
+    <div id="timeline">
+        <h3>📅 Timeline</h3>
+        <div id="timelineList"></div>
+    </div>
+
+    <audio id="bgMusic" loop>
+  <source src="assets/music.mp3" type="audio/mpeg">
+</audio>
+
+    <script>
+        let allMessages = [];
+        let currentSearch = '';
+        const YOHANA_NAMES = ['Yohana', 'yohana', 'Yohanaa'];
+
+        function isYohana(sender) {
+            return YOHANA_NAMES.some(n => sender.toLowerCase().includes('yohana'));
+        }
+
+        function formatDate(dateStr) {
+            const [d, m, y] = dateStr.split('/');
+            const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+            return `${parseInt(d)} ${bulan[parseInt(m)-1]} 20${y}`;
+        }
+
+        async function loadChat() {
+            const res = await fetch('chat.json');
+            allMessages = await res.json();
+            render();
+            buildTimeline();
+        }
+
+        function render() {
+            const container = document.getElementById('messages');
+            container.innerHTML = '';
+            let lastDate = '';
+
+            allMessages.forEach((msg, i) => {
+                if (currentSearch && !msg.text.toLowerCase().includes(currentSearch.toLowerCase())) return;
+
+                if (msg.date !== lastDate) {
+                    const sep = document.createElement('div');
+                    sep.className = 'date-sep';
+                    sep.id = 'date-' + msg.date.replace(/\//g, '-');
+                    sep.innerHTML = `<span>${formatDate(msg.date)}</span>`;
+                    container.appendChild(sep);
+                    lastDate = msg.date;
+                }
+
+                const el = document.createElement('div');
+
+                if (msg.type === 'system') {
+                    el.className = 'msg system';
+                    el.innerHTML = `<div class="bubble">${msg.text}</div>`;
+                } else if (msg.type === 'deleted') {
+                    const side = isYohana(msg.sender) ? 'right' : 'left';
+                    el.className = 'msg ' + side;
+                    el.innerHTML = `<div class="bubble" style="opacity:.6;font-style:italic;">🚫 Pesan ini dihapus</div>`;
+                } else {
+                    const side = isYohana(msg.sender) ? 'right' : 'left';
+                    el.className = 'msg ' + side;
+                    let content = escapeHtml(msg.text);
+                    if (msg.type === 'media') {
+                        content = `<span class="media-tag">📎 Media</span>` + (content ? '<br>' + content : '');
+                    }
+                    const edited = msg.edited ? ' <span class="edited">(diedit)</span>' : '';
+                    el.innerHTML = `
+        <div class="bubble">
+          ${content}
+          <div class="meta">
+            ${msg.time}${side === 'right' ? ' <span class="check">✓✓</span>' : ''}${edited}
+          </div>
+        </div>`;
+                }
+                container.appendChild(el);
+            });
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, m => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[m]);
+        }
+
+        function buildTimeline() {
+            const list = document.getElementById('timelineList');
+            const counts = {};
+            allMessages.forEach(m => {
+                counts[m.date] = (counts[m.date] || 0) + 1;
+            });
+            list.innerHTML = '';
+            Object.keys(counts).reverse().forEach(date => {
+                const div = document.createElement('div');
+                div.className = 'tl-item';
+                div.innerHTML = `${formatDate(date)} <span class="count">(${counts[date]} pesan)</span>`;
+                div.onclick = () => {
+                    const el = document.getElementById('date-' + date.replace(/\//g, '-'));
+                    if (el) el.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    toggleTimeline();
+                };
+                list.appendChild(div);
+            });
+        }
+
+        function openArchive() {
+            document.getElementById('cover').classList.add('hide');
+            document.getElementById('chat').classList.add('show');
+            setTimeout(() => document.getElementById('cover').style.display = 'none', 600);
+        }
+
+        function toggleSearch() {
+            document.getElementById('searchBar').classList.toggle('show');
+            if (document.getElementById('searchBar').classList.contains('show')) {
+                document.getElementById('searchInput').focus();
+            } else {
+                document.getElementById('searchInput').value = '';
+                currentSearch = '';
+                render();
+            }
+        }
+
+        function doSearch() {
+            currentSearch = document.getElementById('searchInput').value;
+            render();
+        }
+
+        function toggleTimeline() {
+            document.getElementById('timeline').classList.toggle('show');
+        }
+
+        function toggleDark() {
+            document.body.classList.toggle('dark');
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicBtn');
+            if (audio.paused) {
+                audio.play();
+                btn.classList.add('playing');
+            } else {
+                audio.pause();
+                btn.classList.remove('playing');
+            }
+        }
+
+        loadChat();
+    </script>
+</body>
+
+</html>
